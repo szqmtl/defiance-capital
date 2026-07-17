@@ -7,10 +7,8 @@ const swaggerUI = require('swagger-ui-express');
 const { createServer } = require('http');
 
 const response = require('./middlewares/response');
-const passport = require('./middlewares/passport');
 const trimmer = require('./middlewares/trimmer');
 const limiter = require('./middlewares/limiter');
-const tswagger = require('./middlewares/tswagger');
 const { validator } = require('./middlewares/validator');
 
 const { SendData, NotFound } = require('./helpers/response');
@@ -36,11 +34,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(trimmer());
-app.use(tswagger());
-app.use(passport());
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use((req, res, next) => {
-  req.io = io;
+  req.io = {};
   return next();
 });
 

@@ -43,6 +43,9 @@
     "count": "Results: {{count}}",
     "filter": "Filter",
     "home": "Home",
+    "diary": "Diary",
+    "amount": "Amount",
+    "date": "Date",
     "new": "Nuovo",
     "ok": "Ok"
   },

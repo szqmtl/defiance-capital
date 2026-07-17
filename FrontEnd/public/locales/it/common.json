@@ -43,6 +43,9 @@
     "count": "Risultati: {{count}}",
     "filter": "Filtra",
     "home": "Home",
+    "diary": "Diario",
+    "amount": "Importo",
+    "date": "Data",
     "new": "Nuovo",
     "ok": "Ok"
   },

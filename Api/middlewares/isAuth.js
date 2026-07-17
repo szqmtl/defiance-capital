@@ -1,54 +1,47 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const { Unauthorized } = require('../helpers/response');
 
-// Mock user for testing
-const mockUser = {
-  id: '1',
-  email: 'test@meblabs.com',
-  name: 'Test User',
-  role: 'user'
+const tokenFromRequest = req => req.cookies?.accessToken || req.headers.authorization?.replace(/^Bearer\s+/i, '');
+
+const attachUserByAccessToken = async (req, res, next) => {
+  try {
+    const token = tokenFromRequest(req);
+
+    if (!token) return next(Unauthorized());
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const user = await User.findById(decoded.id);
+
+    if (!user) return next(Unauthorized());
+
+    req.user = user;
+    res.locals.user = user;
+    return next();
+  } catch (error) {
+    return next(Unauthorized(error));
+  }
 };
 
-const isAuth = (req, res, next) => {
-  // Check for token in cookies or Authorization header
-  let token = req.cookies?.accessToken;
-  
-  if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.substring(7);
-    }
-  }
-  
-  if (!token) {
-    req.user = mockUser; // For testing, just use mock user
-    return next();
-  }
-  
+const attachRefreshContext = (req, res, next) => {
   try {
+    const token = req.cookies?.refreshToken;
+
+    if (!token) return next(Unauthorized());
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
     req.user = decoded;
-    next();
+    res.locals.user = decoded;
+    return next();
   } catch (error) {
-    // If token is invalid, still use mock user for testing
-    req.user = mockUser;
-    next();
+    return next(Unauthorized(error));
   }
 };
 
-const isAuthRt = (req, res, next) => {
-  req.user = mockUser;
-  next();
-};
-
-const isAuthRtlogout = (req, res, next) => {
-  req.user = mockUser;
-  next();
-};
-
-const isAuthChangePassword = (req, res, next) => {
-  req.user = mockUser;
-  next();
-};
+const isAuth = (req, res, next) => attachUserByAccessToken(req, res, next);
+const isAuthRt = (req, res, next) => next();
+const isAuthRtlogout = (req, res, next) => next();
+const isAuthChangePassword = (req, res, next) => next();
 
 module.exports = {
   isAuth,

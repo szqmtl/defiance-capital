@@ -126,4 +126,15 @@ schema.plugin(
   })
 );
 
+const baseResponse = schema.methods.response;
+schema.methods.response = function (fields, responseOptions = {}) {
+  const data = baseResponse.call(this, fields, responseOptions);
+
+  if (!data.company || Object.keys(data.company).length === 0) {
+    data.company = { roles: [] };
+  }
+
+  return data;
+};
+
 module.exports = mongoose.models.User || mongoose.model('User', schema);

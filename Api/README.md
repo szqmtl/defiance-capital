@@ -13,6 +13,10 @@ The backend folder for the fullstack test, built with Node.js, is accessible at 
 npm ci
 ```
 
+## Diary Resource
+
+This assessment solution adds a dedicated transaction resource for the daily expense and income diary.
+
 ---
 
 # Optional Features and Helpers
