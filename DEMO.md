@@ -113,7 +113,7 @@ Expected:
 curl -s -c /tmp/diary.cookies -b /tmp/diary.cookies \
   -H 'Content-Type: application/json' \
   -X POST http://localhost:4000/transactions \
-  -d '{"type":"expense","amount":12.5,"category":"coffee","date":"2026-07-17","description":"team coffee"}'
+  -d '{"type":"expense","amount":12.5,"category":"coffee","date":"2026-07-17T09:00:00.000Z","description":"team coffee"}'
 ```
 
 Copy the returned _id as TX_ID.
@@ -142,7 +142,7 @@ Replace TX_ID with the id from step 4.2.
 ```sh
 curl -s -c /tmp/diary.cookies -b /tmp/diary.cookies \
   -H 'Content-Type: application/json' \
-  -X PUT http://localhost:4000/transactions/TX_ID \
+  -X PATCH http://localhost:4000/transactions/TX_ID \
   -d '{"amount":15.75,"description":"coffee and snack"}'
 ```
 
